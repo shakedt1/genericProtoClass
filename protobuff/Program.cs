@@ -72,6 +72,12 @@ namespace Generic
 
         }
 
+        // Generic method to unpack any object
+        public static T readChildMessage<T>(GenericClass genericClass) where T : IMessage, new()
+        {
+            return genericClass.MyObject.Unpack<T>();
+        }
+
         // Get a message and write it to a file
         public static void writeToFile(IMessage message ,string fileName) 
         {
@@ -146,15 +152,21 @@ namespace Generic
             // Read objects from file. Parse and unpack the any object
             using (Stream input = File.OpenRead(fileName))
             {
+                // use of reflaction
                 object obPerson = readChildMessage(readFromFile(input));
                 object obPhone = readChildMessage(readFromFile(input));
-                object obDog = readChildMessage(readFromFile(input));
-                object obMeir = readChildMessage(readFromFile(input));
+
+                // use of generic
+                Dog obDog = readChildMessage<Dog>(readFromFile(input));
+                Person obMeir = readChildMessage<Person>(readFromFile(input));
+
                 Console.WriteLine("type: {0}\nvalue: {1}\n", obPerson.GetType(), obPerson.ToString());
                 Console.WriteLine("type: {0}\nvalue: {1}\n", obPhone.GetType(), obPhone.ToString());
                 Console.WriteLine("type: {0}\nvalue: {1}\n", obDog.GetType(), obDog.ToString());
                 Console.WriteLine("type: {0}\nvalue: {1}\n", obMeir.GetType(), obMeir.ToString());
             }
+
+            
         }
     }
 }
